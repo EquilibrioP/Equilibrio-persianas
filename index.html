@@ -1,448 +1,1016 @@
+```html
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equilibrio Persianas & Cortinas | Transforma tus espacios</title>
+    <title>EQUILIBRIO PERSIANAS & CORTINAS | Cotizador & Servicios</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0a1710',
+                            card: '#132a1d',
+                            border: '#1f402e',
+                            emerald: '#10b981',
+                            gold: '#d4af37',
+                            goldHover: '#b89628',
+                            accent: '#059669',
+                            ivory: '#fdfbf7',
+                            muted: '#9ca3af'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #112217;
-            color: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+            background-color: #0a1710;
+            color: #fdfbf7;
         }
-        .bg-forest { background-color: #112217; }
-        .bg-forest-dark { background-color: #0b1710; }
-        .text-gold { color: #D4AF37; }
-        .bg-gold { background-color: #D4AF37; }
-        .border-gold { border-color: #D4AF37; }
-        .hover\:bg-gold-dark:hover { background-color: #b3922d; }
-        .card-selected {
-            border: 2px solid #D4AF37;
-            background-color: rgba(212, 175, 55, 0.1);
+        
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fef08a 0%, #d4af37 50%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .gold-border-gradient {
+            border-image: linear-gradient(to right, #d4af37, #10b981) 1;
+        }
+        
+        .custom-glow {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.2);
+        }
+
+        .custom-glow-gold {
+            box-shadow: 0 0 25px -5px rgba(212, 175, 55, 0.25);
+        }
+
+        /* Glassmorphic elements */
+        .glass-card {
+            background: rgba(19, 42, 29, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(31, 64, 46, 0.8);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a1710;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f402e;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
         }
     </style>
 </head>
-<body class="bg-forest text-stone-100 min-h-screen flex flex-col selection:bg-amber-500 selection:text-white">
+<body class="bg-brand-dark text-brand-ivory min-h-screen flex flex-col selection:bg-brand-gold selection:text-black">
 
-    <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 bg-[#112217]/95 backdrop-blur-md border-b border-amber-900/30">
-        <div class="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
-            <a href="#inicio" class="flex items-center gap-3 group">
-                <!-- Logotipo Vectorial Personalizado -->
-                <div class="w-12 h-12 rounded-full bg-amber-900/40 border border-amber-500/50 flex items-center justify-center p-1 shadow-inner">
-                    <svg viewBox="0 0 200 200" class="w-full h-full text-amber-400 fill-current" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 20 L30 60 L30 75 L170 75 L170 60 Z" fill="#D4AF37"/>
-                        <path d="M45 80 L90 80 L90 155 L45 155 Z" fill="#1b3827" stroke="#D4AF37" stroke-width="3"/>
-                        <!-- Persianas lamas -->
-                        <rect x="52" y="90" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <rect x="52" y="102" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <rect x="52" y="114" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <rect x="52" y="126" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <rect x="52" y="138" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <!-- Cortinas elegantes -->
-                        <path d="M110 80 C120 120 115 140 105 155 C135 155 150 120 145 80 Z" fill="#FDFBF7"/>
-                        <path d="M145 80 C155 120 160 140 170 155 C150 155 125 120 110 80 Z" fill="#D4AF37"/>
-                    </svg>
-                </div>
-                <div>
-                    <span class="font-bold text-lg tracking-wide block text-white">EQUILIBRIO</span>
-                    <span class="text-xs text-amber-400 tracking-widest uppercase font-medium">Persianas & Cortinas</span>
-                </div>
-            </a>
-            
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <a href="#por-que" class="hover:text-amber-400 transition-colors">Por qué nosotros</a>
-                <a href="#precios" class="hover:text-amber-400 transition-colors">Precios</a>
-                <a href="#cotizador" class="hover:text-amber-400 transition-colors">Cotizador</a>
-                <a href="#proceso" class="hover:text-amber-400 transition-colors">Proceso</a>
-                <a href="#faq" class="hover:text-amber-400 transition-colors">Preguntas</a>
-                <a href="#contacto" class="hover:text-amber-400 transition-colors">Contacto</a>
-            </nav>
+    <!-- NAVIGATION HEADER -->
+    <header class="sticky top-0 z-50 glass-card border-b border-brand-border/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Brand Logo & Name -->
+                <a href="#inicio" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-card to-brand-border p-0.5 shadow-md group-hover:scale-105 transition-transform">
+                        <img src="logo.png" alt="Equilibrio Logo" class="w-full h-full object-contain rounded-lg" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\"w-full h-full bg-brand-card rounded-lg flex items-center justify-center text-brand-gold border border-brand-gold/30\"><i class=\"fa-solid fa-kaaba text-2xl\"></i></div>';">
+                    </div>
+                    <div>
+                        <span class="block text-lg font-bold tracking-wider text-white uppercase leading-none">
+                            EQUILIBRIO
+                        </span>
+                        <span class="text-xs text-brand-gold font-medium tracking-widest block mt-0.5">PERSIANAS & CORTINAS</span>
+                    </div>
+                </a>
 
-            <a href="https://wa.me/573213183368?text=Hola,%20deseo%20más%20información%20sobre%20el%20mantenimiento%20y%20lavado%20de%20persianas." target="_blank" class="bg-amber-500 hover:bg-amber-600 text-stone-950 font-semibold px-5 py-2.5 rounded-full text-sm transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2">
-                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                WhatsApp
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                    <a href="#inicio" class="hover:text-brand-gold transition-colors py-1 border-b-2 border-transparent hover:border-brand-gold">Inicio</a>
+                    <a href="#cotizador" class="hover:text-brand-gold transition-colors py-1 border-b-2 border-transparent hover:border-brand-gold">Cotizador</a>
+                    <a href="#servicios" class="hover:text-brand-gold transition-colors py-1 border-b-2 border-transparent hover:border-brand-gold">Venta & Servicios</a>
+                    <a href="#preguntas" class="hover:text-brand-gold transition-colors py-1 border-b-2 border-transparent hover:border-brand-gold">Preguntas</a>
+                    <a href="#contacto" class="hover:text-brand-gold transition-colors py-1 border-b-2 border-transparent hover:border-brand-gold">Contacto</a>
+                </nav>
+
+                <!-- CTA Button -->
+                <div class="hidden sm:flex items-center">
+                    <a href="https://wa.me/573213183368?text=Hola%20Equilibrio%20Persianas%20%26%20Cortinas,%20quisiera%20solicitar%20información" 
+                       target="_blank" 
+                       class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg hover:shadow-emerald-900/40 transition-all flex items-center gap-2 text-sm border border-emerald-400/30">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Contactar WhatsApp</span>
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white p-2 rounded-lg focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-card border-b border-brand-border px-4 pt-2 pb-6 space-y-3">
+            <a href="#inicio" class="block py-2 text-gray-200 hover:text-brand-gold font-medium border-b border-brand-border/40">Inicio</a>
+            <a href="#cotizador" class="block py-2 text-gray-200 hover:text-brand-gold font-medium border-b border-brand-border/40">Cotizador Interactivo</a>
+            <a href="#servicios" class="block py-2 text-gray-200 hover:text-brand-gold font-medium border-b border-brand-border/40">Venta & Servicios</a>
+            <a href="#preguntas" class="block py-2 text-gray-200 hover:text-brand-gold font-medium border-b border-brand-border/40">Preguntas Frecuentes</a>
+            <a href="#contacto" class="block py-2 text-gray-200 hover:text-brand-gold font-medium">Contacto</a>
+            <a href="https://wa.me/573213183368" target="_blank" class="w-full mt-3 bg-emerald-600 text-white text-center py-2.5 rounded-xl flex items-center justify-center gap-2 font-semibold">
+                <i class="fa-brands fa-whatsapp"></i> Chat WhatsApp
             </a>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="inicio" class="relative pt-16 pb-24 overflow-hidden border-b border-stone-800">
-        <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
-            <div class="space-y-6">
-                <span class="inline-block bg-amber-900/30 border border-amber-500/40 text-amber-400 text-xs font-semibold px-3.5 py-1.5 rounded-full uppercase tracking-widest">
-                    Mantenimiento y Restauración Profesional
-                </span>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                    Como nuevas y <span class="text-gold">sin cambiarlas.</span>
+    <!-- HERO SECTION -->
+    <section id="inicio" class="relative py-16 md:py-24 overflow-hidden">
+        <!-- Subtle Glow Background Effects -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-900/20 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute bottom-10 right-10 w-80 h-80 bg-amber-600/10 rounded-full blur-3xl -z-10"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-border/80 border border-brand-gold/30 text-brand-gold text-xs font-semibold tracking-wide uppercase mb-6 shadow-inner">
+                    <i class="fa-solid fa-sparkles text-brand-gold"></i>
+                    <span>Soluciones Integrales para tus Ventanas</span>
+                </div>
+
+                <!-- Headline -->
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-6">
+                    Lavado, Mantenimiento y Venta de <span class="gold-gradient-text">Cortinas & Persianas</span>
                 </h1>
-                <p class="text-stone-300 text-lg leading-relaxed">
-                    Lavado, mantenimiento y restauración especializada de cortinas y persianas. Primero diagnosticamos, después intervenimos con altos estándares de calidad.
+
+                <!-- Subtitle -->
+                <p class="text-gray-300 text-base sm:text-lg mb-8 leading-relaxed">
+                    <strong class="text-white">Transforma tus espacios</strong> con la mejor calidad en confección de cortinas nuevas y mantenimiento técnico especializado con limpieza ultrasonido o profunda.
                 </p>
-                <div class="flex flex-wrap gap-4 pt-2">
-                    <a href="#cotizador" class="bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-amber-500/20 text-center">
-                        Cotizar ahora
+
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="#cotizador" class="w-full sm:w-auto bg-gradient-to-r from-brand-gold to-amber-600 hover:from-amber-500 hover:to-brand-gold text-gray-950 font-bold px-8 py-3.5 rounded-xl shadow-lg custom-glow-gold transition-all transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-calculator"></i>
+                        <span>Ir al Cotizador Instantáneo</span>
                     </a>
-                    <a href="#precios" class="border border-stone-600 hover:border-amber-400 text-stone-200 font-semibold px-8 py-3.5 rounded-xl transition-all text-center">
-                        Ver precios 2026
+                    <a href="https://wa.me/573213183368?text=Hola,%20quisiera%20asesoría%20para%20mis%20cortinas%20o%20persianas" target="_blank" class="w-full sm:w-auto glass-card hover:bg-brand-border text-white font-semibold px-7 py-3.5 rounded-xl border border-brand-border transition-all text-center flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-emerald-400"></i>
+                        <span>Escribir por WhatsApp</span>
                     </a>
                 </div>
-                
-                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-stone-800 text-xs text-stone-400">
-                    <div class="bg-stone-900/50 p-3 rounded-lg border border-stone-800">
-                        <strong class="text-stone-200 block mb-1">Entrega rápida</strong> 3 a 5 días hábiles
-                    </div>
-                    <div class="bg-stone-900/50 p-3 rounded-lg border border-stone-800">
-                        <strong class="text-stone-200 block mb-1">Tarifas claras</strong> Por tipo y tamaño
-                    </div>
-                    <div class="bg-stone-900/50 p-3 rounded-lg border border-stone-800">
-                        <strong class="text-stone-200 block mb-1">Cotización</strong> Al instante en línea
-                    </div>
-                </div>
             </div>
 
-            <div class="flex justify-center">
-                <div class="relative w-72 h-72 md:w-96 md:h-96 rounded-3xl bg-gradient-to-br from-amber-500/20 to-emerald-950/40 p-6 border border-amber-500/30 shadow-2xl flex items-center justify-center">
-                    <div class="absolute inset-0 bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:16px_16px] opacity-10 rounded-3xl"></div>
-                    <svg viewBox="0 0 200 200" class="w-full h-full text-amber-400 fill-current drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 20 L30 60 L30 75 L170 75 L170 60 Z" fill="#D4AF37"/>
-                        <path d="M45 80 L90 80 L90 155 L45 155 Z" fill="#112217" stroke="#D4AF37" stroke-width="3"/>
-                        <rect x="52" y="90" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <rect x="52" y="102" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <rect x="52" y="114" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <rect x="52" y="126" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <rect x="52" y="138" width="31" height="6" rx="2" fill="#D4AF37"/>
-                        <path d="M110 80 C120 120 115 140 105 155 C135 155 150 120 145 80 Z" fill="#FDFBF7"/>
-                        <path d="M145 80 C155 120 160 140 170 155 C150 155 125 120 110 80 Z" fill="#D4AF37"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Por qué nosotros -->
-    <section id="por-que" class="py-20 bg-[#0d1a12]">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-amber-400 text-xs font-semibold uppercase tracking-widest block mb-2">Por qué lavar con nosotros</span>
-                <h2 class="text-3xl md:text-4xl font-bold">Conservar antes que reemplazar</h2>
-                <p class="text-stone-400 mt-3">Una cortina o persiana bien cuidada dura mucho más tiempo. Nuestro objetivo es que recuperes lo que ya tienes con criterio técnico.</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <span class="text-2xl font-bold text-amber-400 mb-3 block">01</span>
-                    <h3 class="text-lg font-semibold mb-2">Diagnóstico previo</h3>
-                    <p class="text-sm text-stone-400">Revisamos material, sistema y estado general antes de intervenir. Nada se hace a ciegas.</p>
-                </div>
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <span class="text-2xl font-bold text-amber-400 mb-3 block">02</span>
-                    <h3 class="text-lg font-semibold mb-2">Cuidado especializado</h3>
-                    <p class="text-sm text-stone-400">Aplicamos técnicas de limpieza profunda adaptadas a cada tipo de tejido o estructura delicada.</p>
-                </div>
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <span class="text-2xl font-bold text-amber-400 mb-3 block">03</span>
-                    <h3 class="text-lg font-semibold mb-2">Recuperar, no cambiar</h3>
-                    <p class="text-sm text-stone-400">Evaluamos opciones de restauración y mantenimiento antes de sugerir cualquier reemplazo costoso.</p>
-                </div>
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <span class="text-2xl font-bold text-amber-400 mb-3 block">04</span>
-                    <h3 class="text-lg font-semibold mb-2">Precios transparentes</h3>
-                    <p class="text-sm text-stone-400">Valores claros por tipo y tamaño publicados abiertamente para que cotices sin sorpresas.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Cotizador Interactivo -->
-    <section id="cotizador" class="py-20 bg-forest">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="text-center mb-12">
-                <span class="text-amber-400 text-xs font-semibold uppercase tracking-widest block mb-2">Cotizador en línea</span>
-                <h2 class="text-3xl md:text-4xl font-bold">Arma tu cotización en 3 pasos</h2>
-                <p class="text-stone-400 mt-2">Identifica el tipo de cortina, confirma sus medidas y recibe el valor al instante.</p>
-            </div>
-
-            <div class="bg-stone-900 border border-amber-900/40 rounded-3xl p-6 md:p-8 shadow-2xl">
-                <!-- Paso 1 -->
-                <div class="mb-8">
-                    <h3 class="text-amber-400 font-semibold mb-4 text-sm uppercase tracking-wide">Paso 1: Selecciona el tipo de producto</h3>
-                    <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        <!-- Las opciones se cargan por JS -->
+            <!-- Value Proposition Badges -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+                <div class="glass-card p-6 rounded-2xl border border-brand-border/60 hover:border-brand-gold/40 transition-all flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-950/80 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl shrink-0">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-base mb-1">Servicio a Domicilio</h3>
+                        <p class="text-gray-400 text-sm">Recogida, desmontaje e instalación en la comodidad de tu hogar u oficina.</p>
                     </div>
                 </div>
 
-                <!-- Paso 2 -->
-                <div id="step-2" class="mb-8 hidden bg-stone-950 p-6 rounded-2xl border border-stone-800">
-                    <h3 class="text-amber-400 font-semibold mb-4 text-sm uppercase tracking-wide">Paso 2: Especificaciones y Medidas</h3>
-                    <div id="product-options" class="space-y-4">
-                        <!-- Opciones dinámicas -->
+                <div class="glass-card p-6 rounded-2xl border border-brand-border/60 hover:border-brand-gold/40 transition-all flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-950/80 border border-amber-500/30 flex items-center justify-center text-brand-gold text-xl shrink-0">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
                     </div>
-                    <div class="mt-4 grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs text-stone-400 mb-1">Ancho (Metros)</label>
-                            <input type="number" id="input-width" step="0.1" min="0.1" value="1" class="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs text-stone-400 mb-1">Alto (Metros)</label>
-                            <input type="number" id="input-height" step="0.1" min="0.1" value="1" class="w-full bg-stone-900 border border-stone-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
-                        </div>
+                    <div>
+                        <h3 class="font-bold text-white text-base mb-1">Tecnología Especializada</h3>
+                        <p class="text-gray-400 text-sm">Procesos de lavado ultrasónico y limpieza profunda preservando tus telas.</p>
                     </div>
-                    <div class="mt-4 flex items-center gap-3">
-                        <input type="checkbox" id="is-motorized" class="w-4 h-4 accent-amber-500 rounded">
-                        <label for="is-motorized" class="text-sm text-stone-300">Es motorizada (Recargo $ 40.000)</label>
-                    </div>
-                    <button onclick="addItemToQuote()" class="mt-6 w-full bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold py-3 rounded-xl transition-all">
-                        Agregar pieza a la cotización
-                    </button>
                 </div>
 
-                <!-- Paso 3 -->
-                <div>
-                    <h3 class="text-amber-400 font-semibold mb-4 text-sm uppercase tracking-wide">Paso 3: Tu Cotización Actual</h3>
-                    <div id="quote-summary" class="bg-stone-950 rounded-2xl p-6 border border-stone-800 min-h-[140px] flex flex-col justify-between">
-                        <p class="text-stone-500 text-sm italic text-center my-auto">Aún no hay piezas en la cotización. Selecciona un producto arriba.</p>
+                <div class="glass-card p-6 rounded-2xl border border-brand-border/60 hover:border-brand-gold/40 transition-all flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-950/80 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl shrink-0">
+                        <i class="fa-solid fa-shield-check"></i>
                     </div>
-
-                    <div id="quote-actions" class="mt-6 hidden flex flex-col sm:flex-row gap-3">
-                        <button onclick="sendWhatsApp()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2">
-                            Enviar cotización por WhatsApp
-                        </button>
-                        <button onclick="clearQuote()" class="bg-stone-800 hover:bg-stone-700 text-stone-300 font-semibold py-3 px-6 rounded-xl transition-all">
-                            Vaciar
-                        </button>
+                    <div>
+                        <h3 class="font-bold text-white text-base mb-1">Garantía y Calidad</h3>
+                        <p class="text-gray-400 text-sm">Telas de alta resistencia, mecanismos duraderos y acabados de primera.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Lista de Precios 2026 -->
-    <section id="precios" class="py-20 bg-[#0d1a12] border-t border-stone-800">
-        <div class="max-w-6xl mx-auto px-4">
+    <!-- SECTION 3: COTIZADOR INTERACTIVO (3-STEPS) -->
+    <section id="cotizador" class="py-16 bg-brand-dark/90 relative border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header section -->
             <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="text-amber-400 text-xs font-semibold uppercase tracking-widest block mb-2">Tarifas oficiales</span>
-                <h2 class="text-3xl md:text-4xl font-bold">Lista de Precios 2026</h2>
-                <p class="text-stone-400 mt-2">Valores calculados por unidad según rango de tamaño en metros cuadrados ($M^2$).</p>
+                <span class="text-brand-gold font-semibold text-xs tracking-widest uppercase block mb-1">Simulador en Línea</span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white">Cotizador de Productos y Servicios</h2>
+                <p class="text-gray-400 text-sm mt-2">Calcula en tiempo real el valor estimado para la venta o lavado de tus cortinas y persianas.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <h3 class="text-lg font-bold text-amber-400 mb-4">Enrollable / Sheer Elegance</h3>
-                    <ul class="space-y-3 text-sm text-stone-300">
-                        <li class="flex justify-between border-b border-stone-800 pb-2"><span>Hasta 1 $M^2$</span> <strong class="text-white">$ 31.500</strong></li>
-                        <li class="flex justify-between border-b border-stone-800 pb-2"><span>De 1 a 6 $M^2$</span> <strong class="text-white">$ 59.000</strong></li>
-                        <li class="flex justify-between border-stone-800 pt-1"><span>Más de 6 $M^2$</span> <strong class="text-white">$ 72.100</strong></li>
-                    </ul>
+            <!-- Steps Progress Bar -->
+            <div class="max-w-3xl mx-auto mb-10">
+                <div class="flex items-center justify-between relative">
+                    <div class="w-full absolute top-1/2 -translate-y-1/2 h-1 bg-brand-border -z-0"></div>
+                    <div id="progress-bar-fill" class="absolute top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-brand-gold to-emerald-500 transition-all duration-300 -z-0" style="width: 0%;"></div>
+
+                    <!-- Step 1 Indicator -->
+                    <div class="flex flex-col items-center z-10">
+                        <div id="step-indicator-1" class="w-10 h-10 rounded-full bg-brand-gold text-black font-bold flex items-center justify-center shadow-lg transition-colors">
+                            1
+                        </div>
+                        <span class="text-xs mt-2 font-medium text-brand-gold">Tipo</span>
+                    </div>
+
+                    <!-- Step 2 Indicator -->
+                    <div class="flex flex-col items-center z-10">
+                        <div id="step-indicator-2" class="w-10 h-10 rounded-full bg-brand-border text-gray-400 font-bold flex items-center justify-center shadow-lg transition-colors">
+                            2
+                        </div>
+                        <span class="text-xs mt-2 font-medium text-gray-400">Medidas</span>
+                    </div>
+
+                    <!-- Step 3 Indicator -->
+                    <div class="flex flex-col items-center z-10">
+                        <div id="step-indicator-3" class="w-10 h-10 rounded-full bg-brand-border text-gray-400 font-bold flex items-center justify-center shadow-lg transition-colors">
+                            3
+                        </div>
+                        <span class="text-xs mt-2 font-medium text-gray-400">Resumen</span>
+                    </div>
                 </div>
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <h3 class="text-lg font-bold text-amber-400 mb-4">Romana / Panel Japonés</h3>
-                    <ul class="space-y-3 text-sm text-stone-300">
-                        <li class="flex justify-between border-b border-stone-800 pb-2"><span>Hasta 1 $M^2$</span> <strong class="text-white">$ 56.300</strong></li>
-                        <li class="flex justify-between border-b border-stone-800 pb-2"><span>De 1 a 6 $M^2$</span> <strong class="text-white">$ 94.200</strong></li>
-                        <li class="flex justify-between border-stone-800 pt-1"><span>Más de 6 $M^2$</span> <strong class="text-white">$ 98.300</strong></li>
-                    </ul>
+            </div>
+
+            <!-- Calculator Card Container -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 border border-brand-border/80 custom-glow max-w-4xl mx-auto">
+                
+                <!-- STEP 1: Select Product -->
+                <div id="step-1-content" class="space-y-6">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg bg-brand-gold/20 text-brand-gold text-sm flex items-center justify-center">1</span>
+                        Selecciona el tipo de persiana o cortina
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="product-grid">
+                        <!-- Products generated dynamically via JS for state control -->
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button id="btn-to-step-2" disabled class="opacity-50 cursor-not-allowed bg-brand-gold text-gray-950 font-bold px-6 py-3 rounded-xl transition-all flex items-center gap-2">
+                            Siguiente: Medidas <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <h3 class="text-lg font-bold text-amber-400 mb-4">Persianas Aluminio y Madera</h3>
-                    <ul class="space-y-3 text-sm text-stone-300">
-                        <li class="flex justify-between border-b border-stone-800 pb-2"><span>Aluminio (Hasta 1 $M^2$)</span> <strong class="text-white">$ 62.900</strong></li>
-                        <li class="flex justify-between border-b border-stone-800 pb-2"><span>Madera (1 a 6 $M^2$)</span> <strong class="text-white">$ 111.400</strong></li>
-                        <li class="flex justify-between border-stone-800 pt-1"><span>Madera (> 6 $M^2$)</span> <strong class="text-white">$ 134.900</strong></li>
-                    </ul>
+
+                <!-- STEP 2: Dimensions & Service Mode -->
+                <div id="step-2-content" class="hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-brand-gold/20 text-brand-gold text-sm flex items-center justify-center">2</span>
+                            Detalles y Dimensiones
+                        </h3>
+                        <span id="selected-product-badge" class="bg-brand-border px-3 py-1 rounded-full text-xs text-brand-gold font-semibold">
+                            <!-- Selected product name -->
+                        </span>
+                    </div>
+
+                    <!-- Service Mode Toggle -->
+                    <div class="bg-brand-dark/80 p-1.5 rounded-2xl border border-brand-border flex gap-2">
+                        <button type="button" id="mode-lavado" class="flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all bg-emerald-600 text-white shadow-md">
+                            <i class="fa-solid fa-soap mr-1.5"></i> Lavado y Mantenimiento
+                        </button>
+                        <button type="button" id="mode-venta" class="flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white">
+                            <i class="fa-solid fa-shop mr-1.5"></i> Venta Producto Nuevo
+                        </button>
+                    </div>
+
+                    <!-- Dimensions Form -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-brand-dark/40 p-5 rounded-2xl border border-brand-border/50">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Ancho (Metros)</label>
+                            <div class="relative">
+                                <input type="number" id="input-width" step="0.1" min="0.5" max="10" value="1.5" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-gold transition-colors pl-10">
+                                <i class="fa-solid fa-ruler-horizontal absolute left-3.5 top-3.5 text-gray-500"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Alto (Metros)</label>
+                            <div class="relative">
+                                <input type="number" id="input-height" step="0.1" min="0.5" max="10" value="1.5" class="w-full bg-brand-dark border border-brand-border rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-gold transition-colors pl-10">
+                                <i class="fa-solid fa-ruler-vertical absolute left-3.5 top-3.5 text-gray-500"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calculated M² Display & Motor option -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-brand-border/30 p-4 rounded-xl border border-brand-border/60">
+                        <div class="text-sm">
+                            <span class="text-gray-400">Área calculada:</span>
+                            <span id="calculated-area" class="text-white font-bold text-lg ml-2">2.25 m²</span>
+                            <span class="text-xs text-amber-400 block mt-0.5" id="min-area-note">*Mínimo cobrable: 1.0 m²</span>
+                        </div>
+
+                        <!-- Motorization checkbox -->
+                        <label class="inline-flex items-center gap-3 cursor-pointer select-none">
+                            <input type="checkbox" id="check-motorized" class="w-5 h-5 rounded accent-emerald-500 bg-brand-dark border-brand-border">
+                            <span class="text-sm font-medium text-gray-200">
+                                Motorización / Automatización (+ $40,000)
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Unit Price Estimate -->
+                    <div class="text-right">
+                        <span class="text-xs text-gray-400">Precio unitario estimado:</span>
+                        <div id="unit-price-display" class="text-2xl font-extrabold text-brand-gold">$0 COP</div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4">
+                        <button id="btn-back-to-step-1" class="text-gray-400 hover:text-white text-sm font-medium flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i> Volver a Tipos
+                        </button>
+
+                        <button id="btn-add-item" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl shadow-lg transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Agregar a la Cotización
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Summary Table -->
+                <div id="step-3-content" class="hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-brand-gold/20 text-brand-gold text-sm flex items-center justify-center">3</span>
+                            Resumen de tu Cotización
+                        </h3>
+                        <button id="btn-add-more" class="text-xs bg-brand-border hover:bg-brand-border/80 text-brand-gold px-3 py-1.5 rounded-lg border border-brand-gold/30 flex items-center gap-1 transition-colors">
+                            <i class="fa-solid fa-plus"></i> Agregar otro producto
+                        </button>
+                    </div>
+
+                    <!-- Table of Items -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-brand-dark/80 text-gray-400 border-b border-brand-border uppercase text-xs">
+                                <tr>
+                                    <th class="py-3 px-4">Producto</th>
+                                    <th class="py-3 px-4">Modo</th>
+                                    <th class="py-3 px-4">Dimensiones</th>
+                                    <th class="py-3 px-4 text-right">Precio</th>
+                                    <th class="py-3 px-4 text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-items-body" class="divide-y divide-brand-border/40">
+                                <!-- Cart Items injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Total Section -->
+                    <div class="bg-brand-dark/90 p-5 rounded-2xl border border-brand-gold/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div>
+                            <span class="text-sm text-gray-400 block">Total Estimado General</span>
+                            <span class="text-xs text-emerald-400">Incluye revisión y asesoría técnica a domicilio</span>
+                        </div>
+                        <div id="cart-total-price" class="text-3xl font-extrabold gold-gradient-text">
+                            $0 COP
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-between pt-2">
+                        <button id="btn-clear-cart" class="text-gray-400 hover:text-red-400 text-xs flex items-center justify-center gap-1.5 py-2">
+                            <i class="fa-solid fa-trash"></i> Vaciar cotización
+                        </button>
+
+                        <button id="btn-send-whatsapp" class="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 border border-emerald-400/40 text-base">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            <span>Enviar Cotización por WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CATALOG OF PRODUCTS & SERVICES -->
+    <section id="servicios" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-emerald-400 font-semibold text-xs tracking-widest uppercase block mb-1">Portafolio Especializado</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Nuestros Productos y Servicios</h2>
+                <p class="text-gray-400 text-sm mt-3">Diseñamos, confeccionamos, instalamos y restauramos tus persianas con atención al detalle.</p>
+            </div>
+
+            <!-- Product Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1: Sheer Elegance -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden hover:border-brand-gold/50 transition-all group">
+                    <div class="h-48 bg-gradient-to-br from-emerald-950 to-brand-dark p-6 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 opacity-10 text-brand-gold text-9xl">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <span class="inline-block bg-brand-gold/20 text-brand-gold text-xs px-3 py-1 rounded-full font-semibold border border-brand-gold/30 w-fit">Venta & Lavado</span>
+                        <i class="fa-solid fa-layer-group text-4xl text-brand-gold group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Sheer Elegance</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">Combina la privacidad de las franjas opacas con el paso tamizado de luz de los velos. Elegancia superior para salas y habitaciones.</p>
+                        <a href="#cotizador" onclick="selectProductCatalog('Sheer Elegance')" class="inline-flex items-center text-xs font-bold text-brand-gold hover:text-amber-300 gap-1">
+                            Cotizar este producto <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2: Enrollables Blackout / Screen -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden hover:border-brand-gold/50 transition-all group">
+                    <div class="h-48 bg-gradient-to-br from-emerald-950 to-brand-dark p-6 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 opacity-10 text-emerald-400 text-9xl">
+                            <i class="fa-solid fa-scroll"></i>
+                        </div>
+                        <span class="inline-block bg-emerald-500/20 text-emerald-400 text-xs px-3 py-1 rounded-full font-semibold border border-emerald-500/30 w-fit">Alta Demanda</span>
+                        <i class="fa-solid fa-scroll text-4xl text-emerald-400 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Enrollables Blackout / Screen</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">Ideales para bloqueo total de luz (Blackout) o control de rayos UV sin perder visión al exterior (Screen 5% o 3%).</p>
+                        <a href="#cotizador" onclick="selectProductCatalog('Enrollable Blackout/Screen')" class="inline-flex items-center text-xs font-bold text-brand-gold hover:text-amber-300 gap-1">
+                            Cotizar este producto <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3: Persianas de Madera -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden hover:border-brand-gold/50 transition-all group">
+                    <div class="h-48 bg-gradient-to-br from-emerald-950 to-brand-dark p-6 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 opacity-10 text-amber-500 text-9xl">
+                            <i class="fa-solid fa-bars-staggered"></i>
+                        </div>
+                        <span class="inline-block bg-amber-500/20 text-amber-400 text-xs px-3 py-1 rounded-full font-semibold border border-amber-500/30 w-fit">Acabado Calido</span>
+                        <i class="fa-solid fa-bars-staggered text-4xl text-amber-400 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Persianas de Madera</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">Laminas de madera natural tratada. Aportan calidez, resistencia y control regulable de la ventilación e iluminación.</p>
+                        <a href="#cotizador" onclick="selectProductCatalog('Persiana de Madera')" class="inline-flex items-center text-xs font-bold text-brand-gold hover:text-amber-300 gap-1">
+                            Cotizar este producto <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 4: Persianas de Aluminio -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden hover:border-brand-gold/50 transition-all group">
+                    <div class="h-48 bg-gradient-to-br from-emerald-950 to-brand-dark p-6 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 opacity-10 text-gray-400 text-9xl">
+                            <i class="fa-solid fa-grip-lines"></i>
+                        </div>
+                        <span class="inline-block bg-gray-500/20 text-gray-300 text-xs px-3 py-1 rounded-full font-semibold border border-gray-500/30 w-fit">Oficina & Hogar</span>
+                        <i class="fa-solid fa-grip-lines text-4xl text-gray-300 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Persianas de Aluminio</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">Ligeras, duraderas y de mantenimiento sencillo. Perfectas para oficinas, cocinas y espacios de trabajo dinámicos.</p>
+                        <a href="#cotizador" onclick="selectProductCatalog('Persiana de Aluminio')" class="inline-flex items-center text-xs font-bold text-brand-gold hover:text-amber-300 gap-1">
+                            Cotizar este producto <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 5: Panel Japonés -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden hover:border-brand-gold/50 transition-all group">
+                    <div class="h-48 bg-gradient-to-br from-emerald-950 to-brand-dark p-6 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 opacity-10 text-emerald-400 text-9xl">
+                            <i class="fa-solid fa-border-all"></i>
+                        </div>
+                        <span class="inline-block bg-emerald-500/20 text-emerald-400 text-xs px-3 py-1 rounded-full font-semibold border border-emerald-500/30 w-fit">Grandes Ventanales</span>
+                        <i class="fa-solid fa-border-all text-4xl text-emerald-400 group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Panel Japonés</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">Paneles verticales deslizantes sobre rieles. La alternativa moderna para puertas balcones y ventanales de piso a techo.</p>
+                        <a href="#cotizador" onclick="selectProductCatalog('Panel Japonés')" class="inline-flex items-center text-xs font-bold text-brand-gold hover:text-amber-300 gap-1">
+                            Cotizar este producto <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 6: Mantenimiento Ultrasonido / Profundo -->
+                <div class="glass-card rounded-2xl border border-emerald-500/40 overflow-hidden hover:border-emerald-400 transition-all group shadow-lg">
+                    <div class="h-48 bg-gradient-to-br from-emerald-900 to-emerald-950 p-6 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute -right-6 -bottom-6 opacity-20 text-brand-gold text-9xl">
+                            <i class="fa-solid fa-soap"></i>
+                        </div>
+                        <span class="inline-block bg-brand-gold text-black text-xs px-3 py-1 rounded-full font-extrabold w-fit">Servicio Estrella</span>
+                        <i class="fa-solid fa-wand-sparkles text-4xl text-brand-gold group-hover:scale-110 transition-transform"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Lavado Ultrasonido & Profundo</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-4">Elimina el 99.9% de ácaros, polvo e impurezas sin maltratar las telas. Incluye desmonte, cambio de cordones y re-instalación.</p>
+                        <a href="#cotizador" class="inline-flex items-center text-xs font-bold text-emerald-400 hover:text-emerald-300 gap-1">
+                            Calcular costo de lavado <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Proceso -->
-    <section id="proceso" class="py-20 bg-forest">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-amber-400 text-xs font-semibold uppercase tracking-widest block mb-2">Paso a paso</span>
-                <h2 class="text-3xl md:text-4xl font-bold">Cómo trabajamos</h2>
+    <!-- SECTION 5: FAQ ACCORDION -->
+    <section id="preguntas" class="py-20 bg-brand-dark/95 border-t border-brand-border/40">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14">
+                <span class="text-brand-gold font-semibold text-xs tracking-widest uppercase block mb-1">Resuelve tus dudas</span>
+                <h2 class="text-3xl font-extrabold text-white">Preguntas Frecuentes</h2>
             </div>
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="bg-stone-900/50 p-6 rounded-2xl border border-stone-800 text-center">
-                    <div class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center mx-auto mb-4 border border-amber-500/40">1</div>
-                    <h3 class="font-semibold mb-2">Diagnóstico</h3>
-                    <p class="text-sm text-stone-400">Revisamos cada pieza y evaluamos el tratamiento adecuado.</p>
+
+            <div class="space-y-4" id="faq-container">
+                <!-- FAQ Item 1 -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between font-semibold text-white hover:text-brand-gold transition-colors focus:outline-none">
+                        <span>¿Cuánto tarda el proceso de lavado y mantenimiento?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-gold transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-5 text-gray-300 text-sm leading-relaxed border-t border-brand-border/30 pt-3">
+                        El tiempo estándar de entrega es de 24 a 48 horas hábiles. Recogemos tus persianas en tu domicilio, realizamos el proceso técnico de lavado profundo o ultrasonido, secado especializado, lubricación de mecanismos e instalación.
+                    </div>
                 </div>
-                <div class="bg-stone-900/50 p-6 rounded-2xl border border-stone-800 text-center">
-                    <div class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center mx-auto mb-4 border border-amber-500/40">2</div>
-                    <h3 class="font-semibold mb-2">Aceptación</h3>
-                    <p class="text-sm text-stone-400">Te explicamos el procedimiento antes de iniciar cualquier labor.</p>
+
+                <!-- FAQ Item 2 -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between font-semibold text-white hover:text-brand-gold transition-colors focus:outline-none">
+                        <span>¿Cómo tomo las medidas de mis ventanas para el cotizador?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-gold transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-5 text-gray-300 text-sm leading-relaxed border-t border-brand-border/30 pt-3">
+                        Mide el ancho y alto del marco de tu ventana en metros. Te recomendamos adicionar entre 10 cm y 15 cm a cada lado para asegurar un cubrimiento óptimo de luz. Si deseas precisión exacta, nuestro técnico verificará las medidas durante la visita.
+                    </div>
                 </div>
-                <div class="bg-stone-900/50 p-6 rounded-2xl border border-stone-800 text-center">
-                    <div class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center mx-auto mb-4 border border-amber-500/40">3</div>
-                    <h3 class="font-semibold mb-2">Mantenimiento</h3>
-                    <p class="text-sm text-stone-400">Aplicamos lavado y restauración con técnica profesional.</p>
+
+                <!-- FAQ Item 3 -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between font-semibold text-white hover:text-brand-gold transition-colors focus:outline-none">
+                        <span>¿Ofrecen garantía en persianas nuevas y reparaciones?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-gold transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-5 text-gray-300 text-sm leading-relaxed border-t border-brand-border/30 pt-3">
+                        ¡Sí! Todas nuestras persianas y cortinas nuevas cuentan con garantía de 1 a 3 años por defectos de fábrica y mecanismos. En servicios de mantenimiento ofrecemos 6 meses de garantía sobre el funcionamiento.
+                    </div>
                 </div>
-                <div class="bg-stone-900/50 p-6 rounded-2xl border border-stone-800 text-center">
-                    <div class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center mx-auto mb-4 border border-amber-500/40">4</div>
-                    <h3 class="font-semibold mb-2">Entrega</h3>
-                    <p class="text-sm text-stone-400">Recibe tus piezas como nuevas en un plazo de 3 a 5 días hábiles.</p>
+
+                <!-- FAQ Item 4 -->
+                <div class="glass-card rounded-2xl border border-brand-border/80 overflow-hidden">
+                    <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between font-semibold text-white hover:text-brand-gold transition-colors focus:outline-none">
+                        <span>¿Se pueden automatizar persianas que ya tengo instaladas?</span>
+                        <i class="fa-solid fa-chevron-down text-brand-gold transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 pb-5 text-gray-300 text-sm leading-relaxed border-t border-brand-border/30 pt-3">
+                        En la mayoría de los casos sí es posible adaptar un motor tubular recargable o cableado a tus cortinas enrollables o Sheer Elegance existentes. Durante la revisión a domicilio evaluamos la compatibilidad del tubo del mecanismo.
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ -->
-    <section id="faq" class="py-20 bg-[#0d1a12] border-t border-stone-800">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="text-center mb-16">
-                <span class="text-amber-400 text-xs font-semibold uppercase tracking-widest block mb-2">Dudas habituales</span>
-                <h2 class="text-3xl md:text-4xl font-bold">Preguntas frecuentes</h2>
-            </div>
-            <div class="space-y-4">
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <h3 class="font-bold text-amber-400 mb-2">¿Cuál es el tiempo de entrega?</h3>
-                    <p class="text-sm text-stone-300">El tiempo habitual de entrega para lavado y mantenimiento es de 3 a 5 días hábiles.</p>
-                </div>
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <h3 class="font-bold text-amber-400 mb-2">¿Cómo se calcula el costo?</h3>
-                    <p class="text-sm text-stone-300">Se calcula multiplicando ancho por alto para obtener los metros cuadrados ($M^2$) y aplicamos el rango correspondiente en nuestra lista.</p>
-                </div>
-                <div class="bg-stone-900/60 p-6 rounded-2xl border border-stone-800">
-                    <h3 class="font-bold text-amber-400 mb-2">¿Las cortinas motorizadas tienen recargo?</h3>
-                    <p class="text-sm text-stone-300">Sí, cuentan con un recargo operativo de $ 40.000 por cada cortina debido al cuidado especial de sus componentes electrónicos.</p>
+    <!-- SECTION 6: CONTACT & QR SECTION -->
+    <section id="contacto" class="py-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-card rounded-3xl p-8 sm:p-12 border border-brand-border border-l-4 border-l-brand-gold">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    
+                    <!-- Contact info -->
+                    <div>
+                        <span class="text-brand-gold font-semibold text-xs tracking-widest uppercase block mb-2">Contacto Directo</span>
+                        <h2 class="text-3xl font-extrabold text-white mb-4">¿Tienes dudas o requieres una visita técnica?</h2>
+                        <p class="text-gray-300 text-sm mb-6 leading-relaxed">
+                            Ponte en contacto con nuestros especialistas. Estamos listos para orientarte en la mejor elección de telas, diseños o mantenimiento preventivo.
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-950 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-400 block">Línea Directa & WhatsApp</span>
+                                    <a href="https://wa.me/573213183368" class="text-white font-bold hover:text-brand-gold transition-colors">+57 321 318 3368</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-amber-950 border border-amber-500/30 flex items-center justify-center text-brand-gold">
+                                    <i class="fa-solid fa-clock text-lg"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-400 block">Horario de Atención</span>
+                                    <span class="text-white text-sm font-medium">Lunes a Viernes: 8:00 a.m. - 5:00 p.m. | Sábados: 8:00 a.m. - 1:00 p.m.</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-950 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                    <i class="fa-solid fa-location-dot text-lg"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-400 block">Cobertura</span>
+                                    <span class="text-white text-sm font-medium">Atención a domicilio en la zona urbana y municipios aledaños.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <a href="https://wa.me/573213183368?text=Hola,%20deseo%20agendar%20una%20visita%20técnica" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-xl transition-all shadow-lg text-sm">
+                                <i class="fa-solid fa-calendar-check"></i> Agendar Visita Técnica
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Card -->
+                    <div class="flex flex-col items-center justify-center bg-brand-dark/90 p-8 rounded-2xl border border-brand-border text-center">
+                        <div class="p-3 bg-white rounded-2xl shadow-xl mb-4">
+                            <!-- QR API Generator pointing to WhatsApp -->
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://wa.me/573213183368" alt="WhatsApp QR Code" class="w-44 h-44 object-contain">
+                        </div>
+                        <h4 class="text-white font-bold text-base mb-1">Escanea para Chatear</h4>
+                        <p class="text-xs text-gray-400 max-w-xs">Abre la cámara de tu celular para abrir directamente nuestro chat oficial de WhatsApp.</p>
+                    </div>
+
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contacto -->
-    <section id="contacto" class="py-20 bg-forest border-t border-stone-800">
-        <div class="max-w-4xl mx-auto px-4 text-center space-y-6">
-            <span class="text-amber-400 text-xs font-semibold uppercase tracking-widest block">Estamos para atenderte</span>
-            <h2 class="text-3xl md:text-4xl font-bold">Hablemos de tus cortinas y persianas</h2>
-            <p class="text-stone-300 max-w-xl mx-auto">Escríbenos directamente con tus dudas, fotos o medidas para brindarte una orientación personalizada.</p>
-            
-            <div class="pt-4 flex flex-wrap justify-center gap-4">
-                <a href="https://wa.me/573213183368?text=Hola,%20deseo%20cotizar%20el%20servicio%20para%20mis%20cortinas." target="_blank" class="bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold px-8 py-3.5 rounded-xl transition-all shadow-lg flex items-center gap-2">
-                    Escribir por WhatsApp
-                </a>
+    <!-- FOOTER -->
+    <footer class="bg-brand-dark border-t border-brand-border py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+                
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-brand-card flex items-center justify-center text-brand-gold border border-brand-gold/30">
+                        <i class="fa-solid fa-kaaba text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-white font-bold block text-base leading-tight">EQUILIBRIO PERSIANAS & CORTINAS</span>
+                        <span class="text-brand-gold text-xs italic">Transforma tus espacios</span>
+                    </div>
+                </div>
+
+                <div class="text-xs text-gray-400">
+                    &copy; <span id="current-year"></span> EQUILIBRIO PERSIANAS & CORTINAS. Todos los derechos reservados.
+                </div>
+
+                <div class="flex items-center gap-4 text-gray-400">
+                    <a href="https://wa.me/573213183368" target="_blank" class="w-9 h-9 rounded-full bg-brand-card hover:bg-brand-border flex items-center justify-center hover:text-emerald-400 transition-colors">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                    </a>
+                    <a href="#inicio" class="w-9 h-9 rounded-full bg-brand-card hover:bg-brand-border flex items-center justify-center hover:text-brand-gold transition-colors">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </a>
+                </div>
+
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-stone-950 py-8 border-t border-stone-900 text-center text-xs text-stone-500">
-        <p>© 2026 EQUILIBRIO PERSIANAS & CORTINAS · Transforma tus espacios</p>
     </footer>
 
-    <!-- Script Cotizador -->
+
+    <!-- JAVASCRIPT LOGIC & CALCULATOR ENGINE -->
     <script>
-        const products = [
-            { id: 'enrollable', name: 'Enrollable', base: 59000 },
-            { id: 'romana', name: 'Romana', base: 94200 },
-            { id: 'sheer', name: 'Sheer Elegance', base: 111400 },
-            { id: 'madera', name: 'Persiana Madera', base: 134900 },
-            { id: 'aluminio', name: 'Persiana Aluminio', base: 91700 },
-            { id: 'panel', name: 'Panel Japonés', base: 98300 }
+        // Data Structure for Products and Pricing Models
+        const PRODUCTS_DATA = [
+            { id: 'sheer', name: 'Sheer Elegance', icon: 'fa-layer-group', priceWash: 25000, priceNew: 140000 },
+            { id: 'enrollable', name: 'Enrollables (Blackout/Screen)', icon: 'fa-scroll', priceWash: 22000, priceNew: 110000 },
+            { id: 'madera', name: 'Persiana de Madera', icon: 'fa-bars-staggered', priceWash: 30000, priceNew: 210000 },
+            { id: 'aluminio', name: 'Persiana de Aluminio', icon: 'fa-grip-lines', priceWash: 20000, priceNew: 95000 },
+            { id: 'panel', name: 'Panel Japonés', icon: 'fa-border-all', priceWash: 28000, priceNew: 160000 },
+            { id: 'romana', name: 'Cortina Romana / Tradicional', icon: 'fa-rug', priceWash: 24000, priceNew: 130000 }
         ];
 
+        // State Management
+        let currentStep = 1;
         let selectedProduct = null;
-        let quoteItems = [];
+        let serviceMode = 'lavado'; // 'lavado' or 'venta'
+        let cartItems = [];
 
-        function initCotizador() {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = products.map(p => `
-                <button onclick="selectProduct('${p.id}')" id="prod-${p.id}" class="p-4 rounded-xl border border-stone-800 bg-stone-900 hover:border-amber-500 text-left transition-all">
-                    <span class="font-semibold block text-sm text-stone-200">${p.name}</span>
-                </button>
-            `).join('');
+        // DOM Element References
+        const productGrid = document.getElementById('product-grid');
+        const btnToStep2 = document.getElementById('btn-to-step-2');
+        const step1Content = document.getElementById('step-1-content');
+        const step2Content = document.getElementById('step-2-content');
+        const step3Content = document.getElementById('step-3-content');
+        
+        const stepIndicator1 = document.getElementById('step-indicator-1');
+        const stepIndicator2 = document.getElementById('step-indicator-2');
+        const stepIndicator3 = document.getElementById('step-indicator-3');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+
+        const modeLavadoBtn = document.getElementById('mode-lavado');
+        const modeVentaBtn = document.getElementById('mode-venta');
+        const inputWidth = document.getElementById('input-width');
+        const inputHeight = document.getElementById('input-height');
+        const calculatedArea = document.getElementById('calculated-area');
+        const checkMotorized = document.getElementById('check-motorized');
+        const unitPriceDisplay = document.getElementById('unit-price-display');
+        const selectedProductBadge = document.getElementById('selected-product-badge');
+
+        const btnBackToStep1 = document.getElementById('btn-back-to-step-1');
+        const btnAddItem = document.getElementById('btn-add-item');
+        const btnAddMore = document.getElementById('btn-add-more');
+        const cartItemsBody = document.getElementById('cart-items-body');
+        const cartTotalPrice = document.getElementById('cart-total-price');
+        const btnClearCart = document.getElementById('btn-clear-cart');
+        const btnSendWhatsapp = document.getElementById('btn-send-whatsapp');
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            renderProductGrid();
+            setupFaqAccordion();
+            setupMobileMenu();
+            calculateItemEstimate();
+        });
+
+        // Mobile Menu Toggle
+        function setupMobileMenu() {
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
         }
 
-        function selectProduct(id) {
-            selectedProduct = products.find(p => p.id === id);
-            document.querySelectorAll('#product-grid button').forEach(b => b.classList.remove('card-selected'));
-            document.getElementById(`prod-${id}`).classList.add('card-selected');
-            document.getElementById('step-2').classList.remove('hidden');
+        // Render Step 1 Product Cards
+        function renderProductGrid() {
+            productGrid.innerHTML = '';
+            PRODUCTS_DATA.forEach(prod => {
+                const isSelected = selectedProduct && selectedProduct.id === prod.id;
+                const card = document.createElement('div');
+                card.className = `cursor-pointer rounded-2xl p-4 border transition-all flex flex-col items-center text-center ${
+                    isSelected 
+                    ? 'bg-brand-border/80 border-brand-gold custom-glow-gold' 
+                    : 'bg-brand-dark/80 border-brand-border/60 hover:border-brand-gold/40 hover:bg-brand-border/30'
+                }`;
+                card.onclick = () => selectProduct(prod);
+
+                card.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl ${isSelected ? 'bg-brand-gold text-black' : 'bg-brand-card text-brand-gold'} flex items-center justify-center text-xl mb-3 transition-colors">
+                        <i class="fa-solid ${prod.icon}"></i>
+                    </div>
+                    <span class="text-sm font-bold text-white mb-1">${prod.name}</span>
+                    <span class="text-xs text-gray-400">Lavado desde $${prod.priceWash.toLocaleString('es-CO')} /m²</span>
+                `;
+                productGrid.appendChild(card);
+            });
         }
 
-        function addItemToQuote() {
+        function selectProduct(prod) {
+            selectedProduct = prod;
+            btnToStep2.disabled = false;
+            btnToStep2.classList.remove('opacity-50', 'cursor-not-allowed');
+            renderProductGrid();
+        }
+
+        // External selection from catalog cards
+        window.selectProductCatalog = function(prodName) {
+            const found = PRODUCTS_DATA.find(p => p.name.toLowerCase().includes(prodName.toLowerCase()) || prodName.toLowerCase().includes(p.name.toLowerCase()));
+            if (found) {
+                selectProduct(found);
+                goToStep(2);
+            }
+        };
+
+        // Navigation between Steps
+        function goToStep(step) {
+            currentStep = step;
+
+            step1Content.classList.add('hidden');
+            step2Content.classList.add('hidden');
+            step3Content.classList.add('hidden');
+
+            // Indicators reset
+            stepIndicator1.className = "w-10 h-10 rounded-full bg-brand-border text-gray-400 font-bold flex items-center justify-center shadow-lg transition-colors";
+            stepIndicator2.className = "w-10 h-10 rounded-full bg-brand-border text-gray-400 font-bold flex items-center justify-center shadow-lg transition-colors";
+            stepIndicator3.className = "w-10 h-10 rounded-full bg-brand-border text-gray-400 font-bold flex items-center justify-center shadow-lg transition-colors";
+
+            if (step === 1) {
+                step1Content.classList.remove('hidden');
+                stepIndicator1.className = "w-10 h-10 rounded-full bg-brand-gold text-black font-bold flex items-center justify-center shadow-lg transition-colors";
+                progressBarFill.style.width = "0%";
+            } else if (step === 2) {
+                step2Content.classList.remove('hidden');
+                stepIndicator1.className = "w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center shadow-lg transition-colors";
+                stepIndicator2.className = "w-10 h-10 rounded-full bg-brand-gold text-black font-bold flex items-center justify-center shadow-lg transition-colors";
+                progressBarFill.style.width = "50%";
+                if (selectedProduct) {
+                    selectedProductBadge.textContent = selectedProduct.name;
+                }
+                calculateItemEstimate();
+            } else if (step === 3) {
+                step3Content.classList.remove('hidden');
+                stepIndicator1.className = "w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center shadow-lg transition-colors";
+                stepIndicator2.className = "w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center shadow-lg transition-colors";
+                stepIndicator3.className = "w-10 h-10 rounded-full bg-brand-gold text-black font-bold flex items-center justify-center shadow-lg transition-colors";
+                progressBarFill.style.width = "100%";
+                renderCartTable();
+            }
+        }
+
+        btnToStep2.addEventListener('click', () => {
+            if (selectedProduct) goToStep(2);
+        });
+
+        btnBackToStep1.addEventListener('click', () => goToStep(1));
+        btnAddMore.addEventListener('click', () => goToStep(1));
+
+        // Step 2 Form listeners & calculations
+        modeLavadoBtn.addEventListener('click', () => {
+            serviceMode = 'lavado';
+            modeLavadoBtn.className = "flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all bg-emerald-600 text-white shadow-md";
+            modeVentaBtn.className = "flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white";
+            calculateItemEstimate();
+        });
+
+        modeVentaBtn.addEventListener('click', () => {
+            serviceMode = 'venta';
+            modeVentaBtn.className = "flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all bg-brand-gold text-gray-950 shadow-md";
+            modeLavadoBtn.className = "flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all text-gray-400 hover:text-white";
+            calculateItemEstimate();
+        });
+
+        inputWidth.addEventListener('input', calculateItemEstimate);
+        inputHeight.addEventListener('input', calculateItemEstimate);
+        checkMotorized.addEventListener('change', calculateItemEstimate);
+
+        function calculateItemEstimate() {
+            if (!selectedProduct) return 0;
+
+            const w = parseFloat(inputWidth.value) || 0;
+            const h = parseFloat(inputHeight.value) || 0;
+            const rawArea = w * h;
+            const billableArea = Math.max(1.0, rawArea); // Minimum 1.0 m² rule
+
+            calculatedArea.textContent = `${rawArea.toFixed(2)} m²`;
+
+            const pricePerMeter = (serviceMode === 'lavado') ? selectedProduct.priceWash : selectedProduct.priceNew;
+            let total = billableArea * pricePerMeter;
+
+            if (checkMotorized.checked) {
+                total += 40000; // Motorized addition
+            }
+
+            unitPriceDisplay.textContent = `$${Math.round(total).toLocaleString('es-CO')} COP`;
+            return total;
+        }
+
+        // Add item to cart
+        btnAddItem.addEventListener('click', () => {
             if (!selectedProduct) return;
-            const w = parseFloat(document.getElementById('input-width').value) || 1;
-            const h = parseFloat(document.getElementById('input-height').value) || 1;
-            const motorized = document.getElementById('is-motorized').checked;
-            
-            let area = w * h;
-            if (area < 1) area = 1;
 
-            let price = selectedProduct.base * (area > 1 ? 1.2 : 1);
-            if (motorized) price += 40000;
+            const w = parseFloat(inputWidth.value) || 1.5;
+            const h = parseFloat(inputHeight.value) || 1.5;
+            const price = calculateItemEstimate();
 
-            quoteItems.push({
-                name: selectedProduct.name,
-                dimensions: `${w}m x ${h}m (${area.toFixed(1)} $M^2$)`,
-                motorized: motorized,
+            cartItems.push({
+                id: Date.now(),
+                productName: selectedProduct.name,
+                mode: serviceMode === 'lavado' ? 'Lavado y Mantenimiento' : 'Venta Producto Nuevo',
+                width: w,
+                height: h,
+                area: Math.max(1.0, w * h).toFixed(2),
+                motorized: checkMotorized.checked,
                 price: Math.round(price)
             });
 
-            renderQuote();
-        }
+            // Trigger confetti effect
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 50,
+                    spread: 60,
+                    origin: { y: 0.7 }
+                });
+            }
 
-        function renderQuote() {
-            const summary = document.getElementById('quote-summary');
-            const actions = document.getElementById('quote-actions');
+            goToStep(3);
+        });
 
-            if (quoteItems.length === 0) {
-                summary.innerHTML = `<p class="text-stone-500 text-sm italic text-center my-auto">Aún no hay piezas en la cotización. Selecciona un producto arriba.</p>`;
-                actions.classList.add('hidden');
+        // Step 3 Table Render
+        function renderCartTable() {
+            cartItemsBody.innerHTML = '';
+            let grandTotal = 0;
+
+            if (cartItems.length === 0) {
+                cartItemsBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-gray-400">
+                            No has agregado ningún producto a la cotización.
+                        </td>
+                    </tr>
+                `;
+                cartTotalPrice.textContent = "$0 COP";
                 return;
             }
 
-            let total = 0;
-            let html = `<div class="space-y-3 mb-4">`;
-            quoteItems.forEach((item, index) => {
-                total += item.price;
-                html += `
-                    <div class="flex justify-between items-center text-sm border-b border-stone-800 pb-2">
-                        <div>
-                            <strong class="text-white">${item.name}</strong>
-                            <span class="block text-xs text-stone-400">${item.dimensions} ${item.motorized ? '· Motorizada' : ''}</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-amber-400 font-semibold">$ ${item.price.toLocaleString()}</span>
-                            <button onclick="removeItem(${index})" class="text-rose-400 hover:text-rose-300 text-xs">✕</button>
-                        </div>
-                    </div>
+            cartItems.forEach((item, idx) => {
+                grandTotal += item.price;
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-brand-dark/40 transition-colors";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-bold text-white">${item.productName} ${item.motorized ? '<span class="text-xs text-amber-400 block">(Motorizada)</span>' : ''}</td>
+                    <td class="py-3 px-4 text-gray-300 text-xs">${item.mode}</td>
+                    <td class="py-3 px-4 text-gray-300 text-xs">${item.width}m x ${item.height}m (${item.area} m²)</td>
+                    <td class="py-3 px-4 text-right font-extrabold text-brand-gold">$${item.price.toLocaleString('es-CO')} COP</td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="removeCartItem(${item.id})" class="text-gray-500 hover:text-red-400 transition-colors p-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
                 `;
+                cartItemsBody.appendChild(tr);
             });
-            html += `</div><div class="flex justify-between pt-3 border-t border-stone-800 font-bold text-lg"><span class="text-stone-300">Total Estimado:</span><span class="text-amber-400">$ ${total.toLocaleString()}</span></div>`;
-            
-            summary.innerHTML = html;
-            actions.classList.remove('hidden');
+
+            cartTotalPrice.textContent = `$${grandTotal.toLocaleString('es-CO')} COP`;
         }
 
-        function removeItem(index) {
-            quoteItems.splice(index, 1);
-            renderQuote();
-        }
+        window.removeCartItem = function(id) {
+            cartItems = cartItems.filter(item => item.id !== id);
+            renderCartTable();
+        };
 
-        function clearQuote() {
-            quoteItems = [];
-            renderQuote();
-        }
+        btnClearCart.addEventListener('click', () => {
+            cartItems = [];
+            renderCartTable();
+        });
 
-        function sendWhatsApp() {
-            let text = "Hola EQUILIBRIO PERSIANAS & CORTINAS, deseo confirmar la siguiente cotización:%0A%0A";
-            let total = 0;
-            quoteItems.forEach(i => {
-                text += `- ${i.name} (${i.dimensions}): $ ${i.price.toLocaleString()}%0A`;
-                total += i.price;
+        // WhatsApp Checkout Formatting
+        btnSendWhatsapp.addEventListener('click', () => {
+            if (cartItems.length === 0) {
+                alert('Por favor agrega al menos un ítem a la cotización.');
+                return;
+            }
+
+            let grandTotal = 0;
+            let message = `*COTIZACIÓN - EQUILIBRIO PERSIANAS & CORTINAS*\n`;
+            message += `-----------------------------------\n`;
+
+            cartItems.forEach((item, index) => {
+                grandTotal += item.price;
+                message += `*Item ${index + 1}:* ${item.productName}\n`;
+                message += `• Servicio: ${item.mode}\n`;
+                message += `• Medidas: ${item.width}m (ancho) x ${item.height}m (alto) [${item.area} m²]\n`;
+                if (item.motorized) message += `• Incluye Motorización (+ $40,000)\n`;
+                message += `• Subtotal: $${item.price.toLocaleString('es-CO')} COP\n\n`;
             });
-            text += `%0A*Total estimado: $ ${total.toLocaleString()}*`;
-            window.open(`https://wa.me/573213183368?text=${text}`, '_blank');
-        }
 
-        initCotizador();
+            message += `-----------------------------------\n`;
+            message += `*VALOR ESTIMADO TOTAL:* $${grandTotal.toLocaleString('es-CO')} COP\n\n`;
+            message += `Hola, deseo agendar una revisión a domicilio para confirmar detalles de esta cotización.`;
+
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/573213183368?text=${encodedMessage}`, '_blank');
+        });
+
+        // FAQ Accordion Toggle
+        function setupFaqAccordion() {
+            const faqBtns = document.querySelectorAll('.faq-btn');
+            faqBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const icon = btn.querySelector('i');
+                    const isHidden = content.classList.contains('hidden');
+
+                    // Close all FAQs
+                    document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+                    document.querySelectorAll('.faq-btn i').forEach(i => i.classList.remove('rotate-180'));
+
+                    if (isHidden) {
+                        content.classList.remove('hidden');
+                        icon.classList.add('rotate-180');
+                    }
+                });
+            });
+        }
     </script>
 </body>
 </html>
+```
